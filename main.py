@@ -1,6 +1,8 @@
 import pyautogui as pa
 import time
 import cv2
+from PIL import ImageGrab as ig
+import numpy as np
 
 img_combat = "images/combat.png"
 img_solo = "images/solo.png"
@@ -28,8 +30,26 @@ def select(img):
     pa.moveTo(pos)
     mo_click()
 
+#A = cv2.imread(img_combat)
+A = ig.grab()
+a_np = np.array(A)
+a_np = cv2.cvtColor(a_np,cv2.COLOR_RGB2BGR)
+
+testimg = cv2.imread("images/test.png")
+res = cv2.matchTemplate(a_np,testimg, cv2.TM_SQDIFF_NORMED)
+minv, maxv, minl, maxl = cv2.minMaxLoc(res)
+topleft=minl
+w,h = testimg.shape[0:2]
+botright=(topleft[0]+w,topleft[1]+h)
+cv2.rectangle(a_np,topleft,botright,(0,0,255),2)
+
+print(minv)
+cv2.namedWindow("test")
+cv2.imshow("test",a_np)
+cv2.waitKey(0)
 
 
+quit()
 pa.moveTo(neutral_point)
 mo_click()
 
